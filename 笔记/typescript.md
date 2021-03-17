@@ -191,3 +191,49 @@ typescript（以下简称ts）：是一门以js为基础构建的语言，是js�
 
 
 五、TS的编译选项。
+1、自动编译单个文件。编译文件时，在路径后面添加 -w 可以让TS编译器自动监视文件的变化（即：当文件内容发生变化时，会对文件重新进行编译）。
+```js
+    tsc xxx.ts -w
+```
+
+2、自动编译整个项目。可以直接使用 tsc 指令，来对当前Project下的所有ts文件进行编译，注意：这里有个前提，需要在Project根目录下创建一个ts的配置文件tsconfig.json（注：此JSON文件可以写注释），即使tsconfig.json文件里面只有一个{}，也能完成Project下面所有ts文件的编译。
+```js
+    // 当在tsc后面加上-w之后，就表示让ts编译器监视当前Project下面的所有ts文件，当有ts文件发生改动时，则进行重新编译。
+    tsc -w
+```
+
+3、tsconfig.json文件的相关配置，ts编译器可以根据配置文件里面的信息来进行编译：
+```js
+    扩展：在tsconfig.json文件中，路径里面的 ** 表示任意目录，* 表示任意文件。
+    {
+        // 1、"include"，用来指定哪些ts文件需要被编译，它的值是一个Array，里面用来装需要编译的目录或文件。
+        "include": ["./02_auto_more/zero.ts", "./02_auto_more/two/**/*"],
+
+        // 2、"exclude"，配置不需要编译的ts文件，值也是一个Array。默认值为：["node_module", "bower_components", "jspm_packages"]。
+        "exclude": ["./02_auto_more/two/e.ts"],
+
+        // 3、"extends"，定义被继承的配置文件。在下例中，表示当前配置文件会继承base.json文件中所有的配置信息。
+        "extends": "./config/base.json",
+
+        // 4、"files"，指定被编译文件的列表（只有需要编译的文件很少时才会用到）。
+        "files": ["core.ts", "sys.ts", "types.ts", "parser.ts"],
+
+        // 5、"compilerOptions"，ts编译器的编译选项（最重要、也最复杂）：
+        "compilerOptions": {
+            // 1）"target"，指定ts编译成的es的版本，它的值只能是"es3"、"es5"、"es6"、"es2015"、"es2016"、"es2017"、"es2018"、"es2019"、"es2020"、"exnext"。
+            "target": "es6",
+
+            // 2）"module"，指定要使用的模块规范，它的值有这些"none"、"commonjs"、"amd"、"umd"、"system"、"es6"、"es2015"、"es2020"、"exnext"。
+            "module": "es6",
+
+            // 3）"lib"，用来指定项目中使用的库，默认是"dom"，一般情况下都不用去改的。它的值有很多，可以随意设个错误的值来查看所有的值列表。
+            "lib": "dom",
+
+            // 4）"outDir"，用来指定ts文件编译后所在的目录。
+            "outDir": "./dist"
+
+            // 5）"outFile"，使用了这个属性后，所有在全局作用域中的代码会被合并到同一个文件中。注意：当被编译的ts文件中出现了模块化的代码，需要将"module"的值设置为"system"或"and"才能将不同模块的代码合并到同一个文件中。
+            "outFile": "./dist/index.js"
+        }
+    }
+```

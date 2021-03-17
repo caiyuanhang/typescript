@@ -1,0 +1,10 @@
+{
+    "include": ["./02_auto_more/zero.ts", "./02_auto_more/two/**/*", "./02_auto_more/one/**/*"],
+    "exclude": ["./02_auto_more/two/e.ts"],
+    "compilerOptions": {
+        "target": "es6",
+        "module": "system",
+        "outDir": "./dist",
+        "outFile": "./dist/index.js"
+    }
+}
