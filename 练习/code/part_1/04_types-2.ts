@@ -54,7 +54,7 @@ enum Gender {
     Female
 };
 let n:{ name: string, gender: Gender };
-n = { name: "laowang", gender: Gender.Male };
+n = { name: "laowang", gender: Gender.Female };
 console.log(n.gender === Gender.Male);
 
 

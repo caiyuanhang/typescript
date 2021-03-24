@@ -20,7 +20,7 @@ typescript（以下简称ts）：是一门以js为基础构建的语言，是js�
 4、使用tsc对ts文件进行编译：在ts文件所在目录打开命令行，执行命令：tsc xxx.ts。 
 
 
-四、ts基本类型
+四、ts基本类型（本节所有的代码在part_1）
 1、类型声明：它是ts非常重要的一个特点，通过类型声明可以指定ts中变量（包括实参、形参等）的类型。指定类型后，当变量赋值时，ts编译器会自动检查值是否符合类型声明，符合则赋值，否则报错。总之，变量类型声明后，该变量只能存储声明的类型。
 ```javascript
     // 语法（注意：类型字母是小写）：
@@ -42,7 +42,7 @@ typescript（以下简称ts）：是一门以js为基础构建的语言，是js�
 
     // 3）函数的参数和返回值也可以声明类型。
     function sum(num1: number,num2: number): number{
-        // 在括号外进行类型声明，意思是给函数返回值添加类型声明，如果返回值不是number类型，则报错提示。
+        // 在括号外进行类型声明，就是给函数返回值添加类型声明，如果返回值不是number类型，则报错提示。
         return num1 + num2;
     }
     sum(11,22);
@@ -68,7 +68,7 @@ typescript（以下简称ts）：是一门以js为基础构建的语言，是js�
 3、ts自有类型声明
 ```js
     // 1）any类型，表示是任意类型得值，一个变量设置为any类型后相当于对该变量关闭了TS的类型检测（使用TS时，一般不建议使用any类型）
-    // let d:any;      // 显示any类型声明。
+    // let d:any;      // 显式any类型声明。
     let d;      // 隐式any类型声明
     d = 10;   
     d = "hello";
@@ -91,13 +91,13 @@ typescript（以下简称ts）：是一门以js为基础构建的语言，是js�
     }
 
     // 2.2）类型断言，用来告诉TS解析器unknown类型变量的实际类型。
-    // 2.2.1）语法一：在unknown变量后面添加 as 被赋值变量的类型
+    // 2.2.1）语法一：在unknown变量后面添加 as ，as 后面跟着被赋值变量的类型
     f = e as string;
     // 2.2.2）语法二：在unknown变量前面添加 <被赋值变量的类型>
     f = <string>e
 ```
 ```js
-    // 3）void类型，用来表示空，在函数中，就是表示函数没有返回值。注意：函数的返回值使用了void之后，return不能有任何值（有则报错），但可以是return、return null、return undefined。
+    // 3）void类型，用来表示空，在函数中，就是表示函数没有返回值。注意：函数的返回值使用了void之后，return后面不能有任何值（有则报错），但return、return null、return undefined除外。
     function fn(): void{};
     function fn1(): void{ return };
     function fn2(): void{ return null };
@@ -120,20 +120,21 @@ typescript（以下简称ts）：是一门以js为基础构建的语言，是js�
     g = function(){};   // 当给g赋值一个function时，不报错。
 
     // 5.2）在变量后面使用{}声明类型，这种用法有利于限制对象里面的属性，可以用来指定对象中有哪些属性。
-    // 5.2.1）指定属性的类型。在属性类型的冒号前面添加 ? 表示该属性是可选的。
+    // 5.2.1）指定属性的类型。在属性类型的冒号前面添加 ? 表示该属性是可选的（即有跟没有，都可以）。
     let h:{ name: string, age: number, status?: boolean };
     h = {name:"字", age:1};     // status因为?的存在，这个属性无也不报错。
     h = {name:"字符",age:12, status:true};
 
     // 5.2.2）对象不同类型属性之间还可以使用 & 连接起来（&的用法）：
     let h1: { name: string } & { age: number };
-    h1 = { name: "str", age:123 }    // h1对象要同时存在name和age属性。
+    h1 = { name: "str", age:123 }    // 变量h1这个对象要同时存在name和age属性。
 
     // 5.2.3）只指定某些属性的类型，其他属性的类型可以是任意值。
+    // 注意：这里的propName只是一个变量名（可以是任意名字），propName后面跟着类型声明表示指定该属性名的类型，any表示该属性的值可以是任意类型的值。
     let i:{ name: string, [propName: string]: any };
-    i = { name: "string", age: 11, state: "OK", man: "man" };   // 除了name属性指定为string之外，其他的属性类型都可以不用声明，而且不管添加多少属性。
+    i = { name: "string", age: 11, state: "OK", man: "man" };   // 除了name属性指定为string类型之外，其他属性的类型都可以不用声明（不管添加多少属性）。
 
-    // 5.3）限定函数的结构（如：形参、返回值的类型），可以使用类似箭头函数的方式。
+    // 5.3）可以使用类似箭头函数的形式，限定函数的结构（如：形参、返回值的类型）。
     let j: (param: number, param: numer) => number;
     j = function(param1, param2){ return param1 + param2 };
     j(1,2);
@@ -142,14 +143,14 @@ typescript（以下简称ts）：是一门以js为基础构建的语言，是js�
 
     // 6）array类型声明，其实是声明数组里面装的值是什么类型，也就是什么类型的数组，有两种语法格式。
     // 6.1）语法一：类型[]
-    let k: stringp[];
+    let k: string[];
     k = ["str1", "str2"];
-    k = ["str1", 111];   // 报错，这个数组里面只能装字符串类型的值
+    k = ["str1", 111];   // 报错，这个数组里面只能装string类型的值
 
     // 6.2）语法二：Array<类型>
     let l: Array<number>;
     l = [11, 22];
-    l = [33, "四四"];   // 同以上K的第二个赋值。
+    l = [33, "四四"];   // 报错，这个数组里面只能装number类型的值。
 
 
     // 7）tuple元组类型，就是指固定长度的数组。（TS新增类型）
@@ -166,12 +167,13 @@ typescript（以下简称ts）：是一门以js为基础构建的语言，是js�
     };
     let n:{ name: string, gender: Gender };
     n = { name: "laowang", gender: Gender.Male };
-    console.log(n.gender === Gender.Male);
+    n = { name: "laowang", gender: "xiaowang" };   // 不能将类型string分配给类型Gender
+    console.log(n.gender === Gender.Male);   // true
 ```
 
 4、类型别名
 ```js
-    // 使用type关键字声明一个类型别名。
+    // 使用type关键字声明一个类型别名。 
     type myType = string;   // 这个myType就类似于string。
     let o: myType;
     o = "str";
@@ -190,7 +192,7 @@ typescript（以下简称ts）：是一门以js为基础构建的语言，是js�
 ```
 
 
-五、TS的编译选项。
+五、TS的编译选项。（本节所有的代码在part_2）
 1、自动编译单个文件。编译文件时，在路径后面添加 -w 可以让TS编译器自动监视文件的变化（即：当文件内容发生变化时，会对文件重新进行编译）。
 ```js
     tsc xxx.ts -w
@@ -230,10 +232,136 @@ typescript（以下简称ts）：是一门以js为基础构建的语言，是js�
             "lib": "dom",
 
             // 4）"outDir"，用来指定ts文件编译后所在的目录。
-            "outDir": "./dist"
+            "outDir": "./dist",
 
-            // 5）"outFile"，使用了这个属性后，所有在全局作用域中的代码会被合并到同一个文件中。注意：当被编译的ts文件中出现了模块化的代码，需要将"module"的值设置为"system"或"and"才能将不同模块的代码合并到同一个文件中。
-            "outFile": "./dist/index.js"
+            // 5）"outFile"，使用了这个属性后，所有在全局作用域中的代码会被合并到同一个文件中。注意：当被编译的ts文件中出现了模块化的代码，需要将"module"的值设置为"system"或"and"才能将不同模块的代码合并到同一个文件中。不能跟outDir一起混用，混用了会把outDir覆盖掉。
+            "outFile": "./dist/index.js",
+
+            // 6）"allowJs"，表示是否对js文件进行编译，默认值为false。
+            "allowJs": false,
+
+            // 7）"checkJs"，检查js代码是否符合ts语法规范，默认值是false。
+            "checkJs": false,
+
+            // 8）"removeComments"，ts文件编译后是否移除注释，默认值是false。
+            "removeComments": false,
+
+            // 9）"noEmit"，不编译ts文件（即不生成js文件），默认值是false。
+            "noEmit": false,
+
+            // 10）"noEmitOnError"，当ts文件有错误时不编译（即有错误时不生成js文件），默认值是fasle。注意：只要有一个ts文件有语法错误，所有的ts文件都不会被编译。
+            "noEmitOnError": false,
+
+            // 11）"strict"，作为所有严格检查的总开关，当它为true的时候，所有严格检查的属性都为true，反之亦然，默认值为false。
+            "strict": false,
+
+            // 12）"alwaysStrict"，用来设置ts文件编译后是否使用严格模式，默认值是false。（注意：如果ts文件中使用了import、export等模块语法，则编译后的ts文件没有"use strict"关键字，因为使用了import、export等模块语法之后，js代码默认进入严格模式。备注：这种情况只出现在webstorm；在vs code未曾有这种情况，详情看dist文件夹）
+            "alwaysStrict": false,
+
+            // 13）"noImplicitAny"，不允许未声明类型的变量默认为any类型，默认值为false。
+            "noImplicitAny": false,
+
+            // 14）"noImplicitThis"，不允许函数中存在不明确类型的this，默认值为false。
+            "noImplicitThis": false,
+
+            // 15）"strictNullChecks"，严格检查null值，默认值为false。
+            "strictNullChecks": false
+        }
+    }
+```
+
+
+六、使用webpack打包ts代码。
+1、初始化package.json文件。
+```js
+    npm init webpack-build-ts
+```
+
+2、下载打包需要的依赖
+```js
+    npm install -D webpack webpack-cli ts-loader typescript
+```
+
+3、配置webpack.config.js文件
+```js
+    // 引入node的path包，主要作用是用来拼接路径。
+    const path = require('path');
+
+    // 生成html模板
+    const HtmlWebpackPlugin = require('html-webpack-plugin');
+
+    // 每次重新build之前都会先清空之前的dist文件夹
+    const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+
+    module.exports = {
+        // 1）指定入口文件。
+        entry: "./src/index.ts",
+
+        // 2）指定打包文件的所在目录
+        output: {
+            // 指定打包文件的目录
+            path: path.resolve(__dirname, 'dist'),
+
+            // 打包后文件的名称
+            filename: "home.js"
+        },
+
+        // 3）指定webpack打包时要使用的模块
+        module: {
+            // 指定要加载的规则
+            rules: [
+                {
+                    // test指定规则生效的文件
+                    test: /\.tsx?$/,
+
+                    // 要使用的loader
+                    use: 'ts-loader',
+
+                    // 指定要排除的文件
+                    exclude: /node_modules/
+                }
+            ]
+        },
+
+        // 4）注意：指定完上面的内容之后，还需要添加mode属性，来选择是"development"模式还是"production"模式，否则在build构建的时候会出现警告。mode为"production"模式，build出来的文件内容是正常的。
+        mode: "production",
+
+        // 5）配置webpack插件
+        plugins: [
+            new CleanWebpackPlugin(),
+            new HtmlWebpackPlugin({
+                template: "./public/index.html",
+                filename: "home.html"
+            })
+        ],
+
+        // 6）设置省略扩展名。注意：在设置.tsx省略扩展名之后，要在tsconfig.js文件的compilerOptions下面添加"jsx": "react"属性。
+        resolve: {
+            extensions: ['.ts','.tsx','js','jsx']
+        }
+    }
+```
+
+4、配置tsconfig.json文件
+```js
+    {
+        "compilerOptions": {
+            "target": "ES2015",
+            "module": "ES2015",
+            "strict": true,
+        }
+    }
+```
+
+5、编辑package.json文件。
+```js
+    {
+        "scripts": {
+            // npm run build，构建打包文件
+            "build": "webpack"
+
+            // npm run start，运行项目
+            "start": "webpack serve --open chrome.exe"
         }
     }
 ```
