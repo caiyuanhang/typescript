@@ -11,4 +11,6 @@ console.log(num);
 console.log(num + test[0]);
 
 console.log("caitou");
+console.log(Promise);
+
 
